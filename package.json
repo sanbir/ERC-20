@@ -1,0 +1,50 @@
+{
+  "name": "@karbon14/crowdsale-contracts",
+  "version": "1.0.0",
+  "description": "Karbon14 Smart Contracts",
+  "main": "index.js",
+  "scripts": {
+    "compile": "rimraf build && truffle compile --verbose-rpc",
+    "test": "NODE_ENV=test truffle test",
+    "migrate": "truffle migrate",
+    "ganache": "ganache-cli",
+    "ropsten": "rimraf build && npm run migrate -- --network=ropsten",
+    "development": "rimraf build && npm run migrate -- --network=development",
+    "live": "rimraf build && npm run migrate -- --network=live",
+    "lint": "eslint -f table test migrations Helpers *.js",
+    "lint:fix": "eslint --fix -f table test migrations Helpers *.js",
+    "flatten": "npm run flatten:token && npm run flatten:crowdsale",
+    "flatten:token": "truffle-flattener ./contracts/karbon14Token.sol --output ./flattened-contracts/karbon14Token.sol",
+    "flatten:crowdsale": "truffle-flattener ./contracts/Karbon14Crowdsale.sol --output ./flattened-contracts/Karbon14Crowdsale.sol"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/karbon14/crowdsale-contracts.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/karbon14/crowdsale-contracts/issues"
+  },
+  "homepage": "https://github.com/karbon14/crowdsale-contracts#readme",
+  "devDependencies": {
+    "chai": "4.1.2",
+    "chai-bignumber": "2.0.2",
+    "dotenv": "6.0.0",
+    "eslint": "5.4.0",
+    "eslint-config-prettier": "3.0.1",
+    "eslint-plugin-prettier": "2.6.2",
+    "ganache-cli": "6.1.6",
+    "pify": "4.0.0",
+    "prettier": "1.14.2",
+    "rimraf": "2.6.2",
+    "truffle": "4.1.13",
+    "truffle-hdwallet-provider": "0.0.6"
+  },
+  "dependencies": {
+    "bignumber.js": "^7.2.1",
+    "openzeppelin-solidity": "1.12.0",
+    "truffle-flattener": "1.2.6"
+  }
+}
