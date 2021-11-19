@@ -2,6 +2,33 @@
 
 [![Build Status](https://travis-ci.org/karbon14/crowdsale-contracts.svg?branch=master)](https://travis-ci.org/karbon14/crowdsale-contracts)
 
+## How it works:
+
+- Private round
+Admin deploys ERC-20 contact and becomes its owner.
+
+reserved_for_use_by_admin = maxSupply * 0.36
+After 1 year, admin gets the right to mint (reserved_for_use_by_admin * 0.2), etc.
+Long_term_foundation_budget and Emergency_and_reserve_fund admin gets the right to mint the same way
+
+Admin can mint for private investors total_cap_for_sale = maxSupply * 0.5 right after deployment.
+
+If private investors bought all total_cap_for_sale, no Public round will happen.
+
+- Public round
+
+Admin changes ownership to crowdsale contract.
+
+Crowdsale contract receives ETH and mints the remaining total_cap_for_sale.
+
+Admin can always stop Public round and return to Private round by changing ownership back.
+
+Until resell the contract is paused (except owner).
+- Resell
+ERC-20 contract is un-paused and every holder can transfer tokens.
+
+- Emergency
+  ERC-20 contract is paused. New ERC-20 contract is developed, deployed, and token balances migrated.
 
 ## Mainnet addresses:
 

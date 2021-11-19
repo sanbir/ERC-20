@@ -1,39 +1,35 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/crowdsale/emission/MintedCrowdsale.sol";
-import "./helpers/RefundableCrowdsale.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
-contract Karbon14Crowdsale is RefundableCrowdsale, MintedCrowdsale {
+contract Karbon14Crowdsale is MintedCrowdsale, Ownable {
     using SafeMath for uint256;
     using SafeMath for uint;
+
     MintableToken public token;
-    uint hardCap;
     uint256 rate;
-    uint distribution;
 
     event WalletChange(address wallet);
+    event RateChange(uint256 rate);
 
     constructor
     (
         uint256 _rate,
         address _wallet,
-        MintableToken _token,
-        uint256 _openingTime,
-        uint256 _closingTime,
-        uint _hardCap,
-        uint _softCap, 
-        uint _distribution
+        MintableToken _token
     ) 
         Crowdsale(_rate, _wallet, _token)
-        TimedCrowdsale(_openingTime, _closingTime)
-        CappedCrowdsale(_hardCap)
-        RefundableCrowdsale(_softCap)
         public
     {
         token = _token;
-        hardCap = _hardCap;
         rate = _rate;
-        distribution = _distribution;
+    }
+
+    function changeRate(uint256 _rate) public onlyOwner {
+        require(_rate > 0, "Rate should be greater than zero.");
+        rate = _rate;
+        emit RateChange(_rate);
     }
 
     function changeWallet(address _wallet) public onlyOwner {
@@ -47,32 +43,7 @@ contract Karbon14Crowdsale is RefundableCrowdsale, MintedCrowdsale {
         return totalSupply;
     }
 
-    function getMaxCommunityTokens() public view returns(uint256) {
-        uint256 tokenComminity = hardCap.mul(rate);
-        return tokenComminity;
-    }
-
-    function getTotalFundationTokens() public view returns(uint256) {
-        return getTokenTotalSupply() - getMaxCommunityTokens();
-    }
-
-    function getTokenTotalSupply() public view returns(uint256) {
-        return hardCap.mul(100).div(distribution).mul(rate);
-    }
-
-    function crowdsaleClose() internal {
-        uint256 totalCommunityTokens = getMaxCommunityTokens();
-        uint256 totalSupply = token.totalSupply();
-        uint256 unsold = totalCommunityTokens.sub(totalSupply);
-        uint256 totalFundationTokens = getTotalFundationTokens();
-
-        // emit tokens for the foundation
-        if (goalReached()) {
-            token.mint(wallet, totalFundationTokens.add(unsold));
-        } else {
-            token.mint(wallet, totalFundationTokens.add(totalCommunityTokens));
-        }
-
+    function returnOwnership() public onlyOwner {
         token.transferOwnership(wallet);
     }
 }

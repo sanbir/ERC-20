@@ -12,8 +12,4 @@ contract Karbon14Token is DetailedERC20, MintableToken, BurnableToken, PausableT
     {
 
     }
-
-    function burnFrom(address _from, uint256 _amount) public onlyOwner {
-        _burn(_from, _amount);
-    }
 }
