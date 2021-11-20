@@ -18,27 +18,12 @@ const errorVM = 'VM Exception while processing transaction: revert'
 describe('mintEmergencyFund', () => {
   context('should not mint', () => {
     contract('karbon14Token', ([owner, investor, wallet, purchaser]) => {
-      // it(`should TEST`, async () => {
-      //   console.log('TIME BEFORE')
-      //   console.log(await latestTime())
-      //   await increaseTimeTo(await latestTime() + duration.years(1))
-      //   await advanceBlock()
-      //
-      //   console.log('TIME AFTER')
-      //   console.log(await latestTime())
-      //
-      //   const { karbon14Token } = await getContracts()
-      //   console.log(await karbon14Token.emergencyFundReleaseDate())
-      // })
 
       it(`should not mint emergency fund until 2 year anniversary`, async () => {
         const { karbon14Token } = await getContracts()
 
         await increaseTimeTo(await latestTime() + duration.years(1))
         await advanceBlock()
-
-        console.log('TIME should not mint')
-        console.log(await latestTime())
 
         const actual = await karbon14Token.mintEmergencyFund().catch(e => e.message)
         const expected = errorVM
@@ -70,6 +55,109 @@ describe('mintEmergencyFund', () => {
   })
 })
 
+describe('LongTermFoundationBudget', () => {
+  context('should not mint', () => {
+    contract('karbon14Token', ([owner, investor, wallet, purchaser]) => {
+
+      it(`should not mint LongTermFoundationBudget until 4 year anniversary`, async () => {
+        const { karbon14Token } = await getContracts()
+
+        await increaseTimeTo(await latestTime() + duration.years(3))
+        await advanceBlock()
+
+        const actual = await karbon14Token.mintLongTermFoundationBudget().catch(e => e.message)
+        const expected = errorVM
+
+        assert.deepEqual(actual, expected)
+      })
+    })
+  })
+
+  context('should mint', () => {
+    contract('karbon14Token', ([owner, investor, wallet, purchaser]) => {
+      it(`should mint LongTermFoundationBudget after 4 year anniversary`, async () => {
+        const { karbon14Token } = await getContracts()
+
+        await increaseTimeTo(await latestTime() + duration.years(4))
+        await advanceBlock()
+
+        await karbon14Token.mintLongTermFoundationBudget()
+        const isLongTermFoundationBudgetMinted = await karbon14Token.isLongTermFoundationBudgetMinted()
+        assert.isTrue(isLongTermFoundationBudgetMinted)
+
+        const actual = bigNumberToString(await karbon14Token.balanceOf(owner))
+
+        const expected = '40000000'
+
+        assert.deepEqual(actual, expected)
+      })
+    })
+  })
+})
+
+describe('ReservedForUseByAdminToken', () => {
+  context('should not mint', () => {
+    contract('karbon14Token', ([owner, investor, wallet, purchaser]) => {
+
+      it(`should not mint ReservedForUseByAdminToken until 1 year anniversary`, async () => {
+        const { karbon14Token } = await getContracts()
+
+        await increaseTimeTo(await latestTime() + duration.days(30))
+        await advanceBlock()
+
+        const actual = await karbon14Token.mintReservedForUseByAdmin().catch(e => e.message)
+        const expected = errorVM
+
+        assert.deepEqual(actual, expected)
+      })
+    })
+  })
+
+  context('should mint ReservedForUseByAdminToken 20 % in 1 year', () => {
+    contract('karbon14Token', ([owner, investor, wallet, purchaser]) => {
+      it(`should mint ReservedForUseByAdminToken after 1 year anniversary`, async () => {
+        const { karbon14Token } = await getContracts()
+
+        await increaseTimeTo(await latestTime() + duration.years(1))
+        await advanceBlock()
+
+        await karbon14Token.mintReservedForUseByAdmin()
+
+        const actual = bigNumberToString(await karbon14Token.balanceOf(owner))
+
+        const expected = '72000000'
+
+        assert.deepEqual(actual, expected)
+      })
+    })
+  })
+
+  context('should mint ReservedForUseByAdminToken all', () => {
+    contract('karbon14Token', ([owner, investor, wallet, purchaser]) => {
+      it(`should mint ReservedForUseByAdminToken after 1 year anniversary`, async () => {
+        const { karbon14Token } = await getContracts()
+
+        await increaseTimeTo(await latestTime() + duration.years(3))
+        await advanceBlock()
+
+        await karbon14Token.mintReservedForUseByAdmin()
+        await karbon14Token.mintReservedForUseByAdmin()
+        await karbon14Token.mintReservedForUseByAdmin()
+        await karbon14Token.mintReservedForUseByAdmin()
+        await karbon14Token.mintReservedForUseByAdmin()
+
+        const isReservedForUseByAdminMinted = await karbon14Token.isReservedForUseByAdminMinted()
+        assert.isTrue(isReservedForUseByAdminMinted)
+
+        const actual = bigNumberToString(await karbon14Token.balanceOf(owner))
+
+        const expected = '360000000'
+
+        assert.deepEqual(actual, expected)
+      })
+    })
+  })
+})
 
 contract('karbon14Token', ([owner, spender]) => {
   it(`should be ${TOKEN_NAME} the name of the new token`, async () => {
