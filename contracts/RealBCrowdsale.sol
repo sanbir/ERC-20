@@ -3,7 +3,7 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/crowdsale/emission/MintedCrowdsale.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
-contract Karbon14Crowdsale is MintedCrowdsale, Ownable {
+contract RealBCrowdsale is MintedCrowdsale, Ownable {
     using SafeMath for uint256;
     using SafeMath for uint;
 

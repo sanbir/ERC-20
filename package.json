@@ -1,7 +1,7 @@
 {
-  "name": "@karbon14/crowdsale-contracts",
+  "name": "@realbig/crowdsale-contracts",
   "version": "1.0.0",
-  "description": "Karbon14 Smart Contracts",
+  "description": "Real Big Smart Contracts",
   "main": "index.js",
   "scripts": {
     "compile": "rimraf build && truffle compile --verbose-rpc",
@@ -14,20 +14,20 @@
     "lint": "eslint -f table test migrations Helpers *.js",
     "lint:fix": "eslint --fix -f table test migrations Helpers *.js",
     "flatten": "npm run flatten:token && npm run flatten:crowdsale",
-    "flatten:token": "truffle-flattener ./contracts/karbon14Token.sol --output ./flattened-contracts/karbon14Token.sol",
-    "flatten:crowdsale": "truffle-flattener ./contracts/Karbon14Crowdsale.sol --output ./flattened-contracts/Karbon14Crowdsale.sol"
+    "flatten:token": "truffle-flattener ./contracts/RealBToken.sol --output ./flattened-contracts/RealBToken.sol",
+    "flatten:crowdsale": "truffle-flattener ./contracts/RealBCrowdsale.sol --output ./flattened-contracts/RealBCrowdsale.sol"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/karbon14/crowdsale-contracts.git"
+    "url": "git+https://github.com/RealB/crowdsale-contracts.git"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/karbon14/crowdsale-contracts/issues"
+    "url": "https://github.com/RealB/crowdsale-contracts/issues"
   },
-  "homepage": "https://github.com/karbon14/crowdsale-contracts#readme",
+  "homepage": "https://github.com/RealB/crowdsale-contracts#readme",
   "devDependencies": {
     "chai": "4.1.2",
     "chai-bignumber": "2.0.2",

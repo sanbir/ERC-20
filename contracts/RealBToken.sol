@@ -8,7 +8,7 @@ import "./erc20Token/EmergencyFundToken.sol";
 import "./erc20Token/LongTermFoundationBudgetToken.sol";
 import "./erc20Token/ReservedForUseByAdminToken.sol";
 
-contract Karbon14Token is
+contract RealBToken is
     DetailedERC20,
     BurnableToken,
     PausableToken,
@@ -25,18 +25,4 @@ contract Karbon14Token is
         pause();
         reservedForUseByAdminFirstDate = 365 days;
     }
-
-    /**
-     * @dev Cannot use mintFund directly. Use mintEmergencyFund, mintLongTermFoundationBudget, mintReservedForUseByAdmin instead.
-     * @return A boolean that indicates if the operation was successful.
-     */
-//    function mintFund(
-//        address _to,
-//        uint256 _amount
-//    )
-//    public
-//    returns (bool)
-//    {
-//        return false;
-//    }
 }

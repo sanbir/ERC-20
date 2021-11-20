@@ -1,5 +1,5 @@
-const Karbon14Token = artifacts.require('Karbon14Token')
-const Karbon14Crowdsale = artifacts.require('Karbon14Crowdsale')
+const RealBToken = artifacts.require('RealBToken')
+const RealBCrowdsale = artifacts.require('RealBCrowdsale')
 const { getConfig } = require('../Helpers/getConfig')
 
 module.exports = async (deployer, network, accounts) => {
@@ -18,9 +18,9 @@ module.exports = async (deployer, network, accounts) => {
   const wallet = wallet_address[network]
 
   await deployer.deploy(
-    Karbon14Crowdsale,
+    RealBCrowdsale,
     rate,
     wallet,
-    Karbon14Token.address
+    RealBToken.address
   )
 }
