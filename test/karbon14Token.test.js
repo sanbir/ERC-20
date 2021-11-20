@@ -113,6 +113,24 @@ describe('ReservedForUseByAdminToken', () => {
     })
   })
 
+  context('should not mint directly without funds', () => {
+    contract('karbon14Token', ([owner, investor, wallet, purchaser]) => {
+
+      it(`should not mint directly without funds`, async () => {
+        const { karbon14Token } = await getContracts()
+
+        const BigNumber = web3.BigNumber
+        const amount = new BigNumber(`${42}e+18`)
+
+        try {
+          await karbon14Token.mintFund(investor, amount, {from: owner})
+        } catch (actual) {
+          assert.isTrue(actual.message.indexOf('mintFund is not a function') > 0)
+        }
+      })
+    })
+  })
+
   context('should mint ReservedForUseByAdminToken 20 % in 1 year', () => {
     contract('karbon14Token', ([owner, investor, wallet, purchaser]) => {
       it(`should mint ReservedForUseByAdminToken after 1 year anniversary`, async () => {
@@ -187,6 +205,7 @@ describe('karbon14Crowdsale allowance', () => {
       it('approves the requested amount', async function() {
         const amount = 100
         const { karbon14Token } = await getContracts()
+        await karbon14Token.unpause({ from: owner })
         await karbon14Token.approve(spender, amount, { from: owner })
 
         const actual = (await karbon14Token.allowance(owner, spender)).toString(10)
@@ -201,6 +220,7 @@ describe('karbon14Crowdsale allowance', () => {
     it('approves the requested amount and replaces the previous one', async function() {
       const amount = 100
       const { karbon14Token } = await getContracts()
+      await karbon14Token.unpause({ from: owner })
       await karbon14Token.approve(spender, 1, { from: owner })
       await karbon14Token.approve(spender, amount, { from: owner })
 
@@ -215,6 +235,8 @@ describe('karbon14Crowdsale allowance', () => {
     it('emits an approval event', async function() {
       const amount = 100
       const { karbon14Token } = await getContracts()
+
+      await karbon14Token.unpause({ from: owner })
       const { logs } = await karbon14Token.approve(spender, amount, { from: owner })
 
       const actual = {

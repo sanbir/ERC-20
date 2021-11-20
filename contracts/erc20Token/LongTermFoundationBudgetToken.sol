@@ -1,8 +1,8 @@
 pragma solidity ^0.4.24;
 
-import "openzeppelin-solidity/contracts/token/ERC20/CappedToken.sol";
+import "./InvestorAndFundsToken.sol";
 
-contract LongTermFoundationBudgetToken is CappedToken {
+contract LongTermFoundationBudgetToken is InvestorAndFundsToken {
     uint256 constant public longTermFoundationBudgetSupplyToMint = 4e25;
     bool public isLongTermFoundationBudgetMinted;
     uint256 public longTermFoundationBudgetReleaseDate;
@@ -29,6 +29,6 @@ contract LongTermFoundationBudgetToken is CappedToken {
     returns (bool)
     {
         isLongTermFoundationBudgetMinted = true;
-        return mint(owner, longTermFoundationBudgetSupplyToMint);
+        return mintFund(owner, longTermFoundationBudgetSupplyToMint);
     }
 }

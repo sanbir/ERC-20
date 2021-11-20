@@ -1,9 +1,9 @@
 pragma solidity ^0.4.24;
 
-import "openzeppelin-solidity/contracts/token/ERC20/CappedToken.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "./InvestorAndFundsToken.sol";
 
-contract ReservedForUseByAdminToken is CappedToken {
+contract ReservedForUseByAdminToken is InvestorAndFundsToken {
     uint256 constant public reservedForUseByAdminSupplyToMint = 36e25;
     uint256 constant public amountToMint = 72e24;
 
@@ -35,7 +35,7 @@ contract ReservedForUseByAdminToken is CappedToken {
     {
         reservedForUseByAdminReleaseDate = reservedForUseByAdminReleaseDate + 182 days;
 
-        bool mintResult = mint(owner, amountToMint);
+        bool mintResult = mintFund(owner, amountToMint);
 
         reservedForUseByAdminSupplyMinted = reservedForUseByAdminSupplyMinted.add(amountToMint);
 

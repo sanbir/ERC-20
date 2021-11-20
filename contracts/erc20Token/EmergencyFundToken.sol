@@ -1,8 +1,8 @@
 pragma solidity ^0.4.24;
 
-import "openzeppelin-solidity/contracts/token/ERC20/CappedToken.sol";
+import "./InvestorAndFundsToken.sol";
 
-contract EmergencyFundToken is CappedToken {
+contract EmergencyFundToken is InvestorAndFundsToken {
     uint256 constant public emergencyFundSupplyToMint = 10e25;
     bool public isEmergencyFundMinted;
     uint256 emergencyFundReleaseDate;
@@ -29,6 +29,6 @@ contract EmergencyFundToken is CappedToken {
     returns (bool)
     {
         isEmergencyFundMinted = true;
-        return mint(owner, emergencyFundSupplyToMint);
+        return mintFund(owner, emergencyFundSupplyToMint);
     }
 }

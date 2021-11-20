@@ -10,7 +10,6 @@ import "./erc20Token/ReservedForUseByAdminToken.sol";
 
 contract Karbon14Token is
     DetailedERC20,
-    CappedToken,
     BurnableToken,
     PausableToken,
     EmergencyFundToken,
@@ -21,10 +20,23 @@ contract Karbon14Token is
 
     constructor(string _name, string _symbol, uint8 _decimals)
         DetailedERC20(_name, _symbol, _decimals)
-        CappedToken(1e27)
         public
     {
         pause();
         reservedForUseByAdminFirstDate = 365 days;
     }
+
+    /**
+     * @dev Cannot use mintFund directly. Use mintEmergencyFund, mintLongTermFoundationBudget, mintReservedForUseByAdmin instead.
+     * @return A boolean that indicates if the operation was successful.
+     */
+//    function mintFund(
+//        address _to,
+//        uint256 _amount
+//    )
+//    public
+//    returns (bool)
+//    {
+//        return false;
+//    }
 }

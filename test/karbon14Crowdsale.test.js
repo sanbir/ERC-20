@@ -233,6 +233,7 @@ describe('karbon14Crowdsale Pausable Token', () => {
       context('when the token is paused', () => {
         it('pauses the token', async () => {
           const { karbon14Token } = await getContracts()
+          await karbon14Token.unpause({ from: owner })
 
           await karbon14Token.pause({ from: owner })
           const actual = await karbon14Token.paused()
@@ -247,6 +248,7 @@ describe('karbon14Crowdsale Pausable Token', () => {
       context('when the token is paused', () => {
         it('emits a Pause event', async function() {
           const { karbon14Token } = await getContracts()
+          await karbon14Token.unpause({ from: owner })
 
           const { logs } = await karbon14Token.pause({ from: owner })
 
@@ -262,6 +264,7 @@ describe('karbon14Crowdsale Pausable Token', () => {
       context('when the token is paused twice', () => {
         it('reverts', async function() {
           const { karbon14Token } = await getContracts()
+          await karbon14Token.unpause({ from: owner })
 
           await karbon14Token.pause({ from: owner })
 
@@ -277,6 +280,7 @@ describe('karbon14Crowdsale Pausable Token', () => {
       context('when the sender is not the owner', () => {
         it('reverts', async function() {
           const { karbon14Token } = await getContracts()
+          await karbon14Token.unpause({ from: owner })
 
           const actual = await karbon14Token.pause({ from: investor }).catch(e => e.message)
           const expected = errorVM
@@ -292,6 +296,7 @@ describe('karbon14Crowdsale Pausable Token', () => {
       context('when the sender is not the owner', () => {
         it('reverts', async function() {
           const { karbon14Token } = await getContracts()
+          await karbon14Token.unpause({ from: owner })
 
           await karbon14Token.pause({ from: owner })
 
@@ -307,6 +312,7 @@ describe('karbon14Crowdsale Pausable Token', () => {
       context('when the token is unpause', () => {
         it('emits a Unpause event', async function() {
           const { karbon14Crowdsale, karbon14Token } = await getContracts()
+          await karbon14Token.unpause({ from: owner })
 
           const karbon14CrowdsaleAddress = await karbon14Crowdsale.address
           await karbon14Token.transferOwnership(karbon14CrowdsaleAddress)
@@ -331,6 +337,7 @@ describe('karbon14Crowdsale Pausable Token', () => {
       context('when the token is unpause twice', () => {
         it('reverts', async function() {
           const { karbon14Crowdsale, karbon14Token } = await getContracts()
+          await karbon14Token.unpause({ from: owner })
 
           const karbon14CrowdsaleAddress = await karbon14Crowdsale.address
           await karbon14Token.transferOwnership(karbon14CrowdsaleAddress)
@@ -358,6 +365,7 @@ describe('karbon14Crowdsale Pausable Token', () => {
       context('default', () => {
         it('is not paused by default', async () => {
           const { karbon14Crowdsale, karbon14Token } = await getContracts()
+          await karbon14Token.unpause({ from: owner })
 
           const karbon14CrowdsaleAddress = await karbon14Crowdsale.address
           await karbon14Token.transferOwnership(karbon14CrowdsaleAddress)
@@ -383,6 +391,7 @@ describe('karbon14Crowdsale Pausable Token', () => {
       context('when the token is unpaused', () => {
         it('allows to transfer', async () => {
           const { karbon14Crowdsale, karbon14Token } = await getContracts()
+          await karbon14Token.unpause({ from: owner })
 
           const karbon14CrowdsaleAddress = await karbon14Crowdsale.address
           await karbon14Token.transferOwnership(karbon14CrowdsaleAddress)
@@ -407,6 +416,7 @@ describe('karbon14Crowdsale Pausable Token', () => {
       context('when the token is paused and unpaused', () => {
         it('allows to transfer', async () => {
           const { karbon14Crowdsale, karbon14Token } = await getContracts()
+          await karbon14Token.unpause({ from: owner })
 
           const karbon14CrowdsaleAddress = await karbon14Crowdsale.address
           await karbon14Token.transferOwnership(karbon14CrowdsaleAddress)
@@ -434,6 +444,7 @@ describe('karbon14Crowdsale Pausable Token', () => {
       context('when the token is paused', () => {
         it('deny to transfer', async () => {
           const { karbon14Crowdsale, karbon14Token } = await getContracts()
+          await karbon14Token.unpause({ from: owner })
 
           const karbon14CrowdsaleAddress = await karbon14Crowdsale.address
           await karbon14Token.transferOwnership(karbon14CrowdsaleAddress)
@@ -510,6 +521,8 @@ describe('karbon14Crowdsale Pausable Token', () => {
     contract('karbon14Crowdsale', ([owner, investor, wallet, purchaser]) => {
       it('allows to approve when unpaused', async () => {
         const { karbon14Token } = await getContracts()
+        await karbon14Token.unpause({ from: owner })
+
         const BigNumber = web3.BigNumber
 
         const tokens = new BigNumber(`${100}e+18`)
@@ -526,6 +539,7 @@ describe('karbon14Crowdsale Pausable Token', () => {
     contract('karbon14Crowdsale', ([owner, investor, wallet, purchaser]) => {
       it('allows to transfer when paused and then unpaused', async () => {
         const { karbon14Crowdsale, karbon14Token } = await getContracts()
+        await karbon14Token.unpause({ from: owner })
 
         const karbon14CrowdsaleAddress = await karbon14Crowdsale.address
         await karbon14Token.transferOwnership(karbon14CrowdsaleAddress)
@@ -553,6 +567,7 @@ describe('karbon14Crowdsale Pausable Token', () => {
     contract('karbon14Crowdsale', ([owner, investor, wallet, purchaser]) => {
       it('reverts when trying to transfer when paused', async () => {
         const { karbon14Crowdsale, karbon14Token } = await getContracts()
+        await karbon14Token.unpause({ from: owner })
 
         const karbon14CrowdsaleAddress = await karbon14Crowdsale.address
         await karbon14Token.transferOwnership(karbon14CrowdsaleAddress)
@@ -578,6 +593,7 @@ describe('karbon14Crowdsale Pausable Token', () => {
     contract('karbon14Crowdsale', ([owner, investor, wallet, purchaser]) => {
       it('allows to transfer from when unpaused', async () => {
         const { karbon14Crowdsale, karbon14Token } = await getContracts()
+        await karbon14Token.unpause({ from: owner })
 
         const karbon14CrowdsaleAddress = await karbon14Crowdsale.address
         await karbon14Token.transferOwnership(karbon14CrowdsaleAddress)
@@ -609,6 +625,7 @@ describe('karbon14Crowdsale Pausable Token', () => {
     contract('karbon14Crowdsale', ([owner, investor, wallet, purchaser]) => {
       it('allows to transfer when paused and then unpaused', async () => {
         const { karbon14Crowdsale, karbon14Token } = await getContracts()
+        await karbon14Token.unpause({ from: owner })
 
         const karbon14CrowdsaleAddress = await karbon14Crowdsale.address
         await karbon14Token.transferOwnership(karbon14CrowdsaleAddress)
@@ -645,6 +662,7 @@ describe('karbon14Crowdsale Pausable Token', () => {
     contract('karbon14Crowdsale', ([owner, investor, wallet, purchaser]) => {
       it('reverts when trying to transfer from when paused', async () => {
         const { karbon14Crowdsale, karbon14Token } = await getContracts()
+        await karbon14Token.unpause({ from: owner })
 
         const karbon14CrowdsaleAddress = await karbon14Crowdsale.address
         await karbon14Token.transferOwnership(karbon14CrowdsaleAddress)
@@ -677,6 +695,7 @@ describe('karbon14Crowdsale Pausable Token', () => {
     contract('karbon14Crowdsale', ([owner, investor, wallet, purchaser]) => {
       it('allows to increase approval when unpaused', async () => {
         const { karbon14Crowdsale, karbon14Token } = await getContracts()
+        await karbon14Token.unpause({ from: owner })
 
         const karbon14CrowdsaleAddress = await karbon14Crowdsale.address
         await karbon14Token.transferOwnership(karbon14CrowdsaleAddress)
@@ -702,6 +721,8 @@ describe('karbon14Crowdsale Pausable Token', () => {
     contract('karbon14Crowdsale', ([owner, investor, wallet, purchaser]) => {
       it('reverts when trying to increase approval when paused', async () => {
         const { karbon14Crowdsale, karbon14Token } = await getContracts()
+
+        await karbon14Token.unpause({ from: owner })
 
         const karbon14CrowdsaleAddress = await karbon14Crowdsale.address
         await karbon14Token.transferOwnership(karbon14CrowdsaleAddress)
@@ -730,6 +751,8 @@ describe('karbon14Crowdsale Pausable Token', () => {
     contract('karbon14Crowdsale', ([owner, investor, wallet, purchaser]) => {
       it('allows to increase approval when paused and then unpaused', async () => {
         const { karbon14Crowdsale, karbon14Token } = await getContracts()
+
+        await karbon14Token.unpause({ from: owner })
 
         const karbon14CrowdsaleAddress = await karbon14Crowdsale.address
         await karbon14Token.transferOwnership(karbon14CrowdsaleAddress)
