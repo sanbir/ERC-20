@@ -422,7 +422,9 @@ describe('karbon14Crowdsale Pausable Token', () => {
 
         const tokens = new BigNumber(`${100}e+1`)
 
-        await karbon14Crowdsale.buyTokens(purchaser, { value: 420, from: investor })
+        const value = ether(1)
+
+        await karbon14Crowdsale.buyTokens(purchaser, { value: value, from: investor })
 
         await karbon14Token.pause({ from: wallet })
         await karbon14Token.unpause({ from: wallet })
@@ -438,11 +440,18 @@ describe('karbon14Crowdsale Pausable Token', () => {
 
     contract('karbon14Crowdsale', ([owner, investor, wallet, purchaser]) => {
       it('reverts when trying to transfer when paused', async () => {
-        const { karbon14Token } = await getContracts()
+        const { karbon14Crowdsale, karbon14Token } = await getContracts()
+
+        const karbon14CrowdsaleAddress = await karbon14Crowdsale.address
+        await karbon14Token.transferOwnership(karbon14CrowdsaleAddress)
+
         const BigNumber = web3.BigNumber
+        const value = ether(42)
+        await karbon14Crowdsale.buyTokens(owner, { value: value, from: investor })
 
         const tokens = new BigNumber(`${100}e+18`)
 
+        await karbon14Crowdsale.returnOwnership()
         await karbon14Token.pause({ from: wallet })
 
         const actual = await karbon14Token.approve(purchaser, tokens, { from: wallet }).catch(e => e.message)
@@ -456,8 +465,14 @@ describe('karbon14Crowdsale Pausable Token', () => {
   describe('transfer from', function() {
     contract('karbon14Crowdsale', ([owner, investor, wallet, purchaser]) => {
       it('allows to transfer from when unpaused', async () => {
-        const { karbon14Token } = await getContracts()
+        const { karbon14Crowdsale, karbon14Token } = await getContracts()
+
+        const karbon14CrowdsaleAddress = await karbon14Crowdsale.address
+        await karbon14Token.transferOwnership(karbon14CrowdsaleAddress)
+
         const BigNumber = web3.BigNumber
+        const value = ether(42)
+        await karbon14Crowdsale.buyTokens(owner, { value: value, from: investor })
 
         const tokens = new BigNumber(`${42}e+18`)
         await karbon14Token.approve(wallet, tokens, { from: owner })
@@ -487,7 +502,8 @@ describe('karbon14Crowdsale Pausable Token', () => {
         await karbon14Token.transferOwnership(karbon14CrowdsaleAddress)
 
         const BigNumber = web3.BigNumber
-        await karbon14Crowdsale.buyTokens(owner, { value: 42, from: investor })
+        const value = ether(2)
+        await karbon14Crowdsale.buyTokens(owner, { value: value, from: investor })
 
         const tokens = new BigNumber(`${42}e+18`)
         const tokensTransfer = new BigNumber(`${1}e+18`)
@@ -495,6 +511,7 @@ describe('karbon14Crowdsale Pausable Token', () => {
         await karbon14Token.approve(wallet, tokens, { from: owner })
 
         await karbon14Crowdsale.returnOwnership()
+
         await karbon14Token.pause({ from: wallet })
         await karbon14Token.unpause({ from: wallet })
 
@@ -521,7 +538,10 @@ describe('karbon14Crowdsale Pausable Token', () => {
         await karbon14Token.transferOwnership(karbon14CrowdsaleAddress)
 
         const BigNumber = web3.BigNumber
-        await karbon14Crowdsale.buyTokens(owner, { value: 42, from: investor })
+
+        const value = ether(42)
+
+        await karbon14Crowdsale.buyTokens(owner, { value: value, from: investor })
 
         const tokens = new BigNumber(`${42}e+1`)
         const tokensTransfer = new BigNumber(`${1}e+1`)
@@ -550,7 +570,10 @@ describe('karbon14Crowdsale Pausable Token', () => {
         await karbon14Token.transferOwnership(karbon14CrowdsaleAddress)
 
         const BigNumber = web3.BigNumber
-        await karbon14Crowdsale.buyTokens(purchaser, { value: 42, from: investor })
+
+        const value = ether(42)
+
+        await karbon14Crowdsale.buyTokens(purchaser, { value: value, from: investor })
 
         const tokensApprove = new BigNumber(`${40}e+18`)
 
@@ -573,7 +596,9 @@ describe('karbon14Crowdsale Pausable Token', () => {
 
         const BigNumber = web3.BigNumber
 
-        await karbon14Crowdsale.buyTokens(purchaser, { value: 42, from: investor })
+        const value = ether(42)
+
+        await karbon14Crowdsale.buyTokens(purchaser, { value: value, from: investor })
 
         const tokensApprove = new BigNumber(`${40}e+18`)
 
@@ -599,7 +624,9 @@ describe('karbon14Crowdsale Pausable Token', () => {
 
         const BigNumber = web3.BigNumber
 
-        await karbon14Crowdsale.buyTokens(purchaser, { value: 1000, from: investor })
+        const value = ether(1)
+
+        await karbon14Crowdsale.buyTokens(purchaser, { value: value, from: investor })
 
         const tokensApprove = new BigNumber(`${100}e+18`)
 
