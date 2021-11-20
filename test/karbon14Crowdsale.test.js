@@ -453,6 +453,57 @@ describe('karbon14Crowdsale Pausable Token', () => {
         })
       })
     })
+
+    contract('karbon14Crowdsale', ([owner, investor, wallet, purchaser]) => {
+      context('private investment', () => {
+        it('private investors can buy', async () => {
+          const { karbon14Token } = await getContracts()
+
+          const isPaused = await karbon14Token.paused()
+          assert.isTrue(isPaused)
+
+          const BigNumber = web3.BigNumber
+          const amount = new BigNumber(`${42}e+18`)
+          await karbon14Token.mint(investor, amount, { from: owner })
+
+          const actual = bigNumberToString(await karbon14Token.balanceOf(investor))
+          const expected = '42'
+          assert.deepEqual(actual, expected)
+        })
+
+        it('private investors cannot buy more than total cap for sale (50% of total cap)', async () => {
+          const { karbon14Token } = await getContracts()
+
+          const isPaused = await karbon14Token.paused()
+          assert.isTrue(isPaused)
+
+          const BigNumber = web3.BigNumber
+          const amount = new BigNumber(`${600000000}e+18`)
+          const actual = await karbon14Token.mint(investor, amount, { from: owner }).catch(e => e.message)
+          const expected = errorVM
+
+          assert.deepEqual(actual, expected)
+        })
+
+        it('public investors can buy', async () => {
+          const { karbon14Crowdsale, karbon14Token } = await getContracts()
+
+          const karbon14CrowdsaleAddress = await karbon14Crowdsale.address
+          await karbon14Token.transferOwnership(karbon14CrowdsaleAddress)
+
+          const isPaused = await karbon14Token.paused()
+          assert.isTrue(isPaused)
+
+          const value = ether(1)
+
+          await karbon14Crowdsale.buyTokens(purchaser, { value: value, from: purchaser })
+
+          const actual = bigNumberToString(await karbon14Token.balanceOf(purchaser))
+          const expected = '30000'
+          assert.deepEqual(actual, expected)
+        })
+      })
+    })
   })
 
   describe('approve', function() {

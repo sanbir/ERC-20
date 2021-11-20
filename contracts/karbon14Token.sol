@@ -24,6 +24,7 @@ contract Karbon14Token is
         CappedToken(1e27)
         public
     {
+        pause();
         reservedForUseByAdminFirstDate = 365 days;
     }
 }
