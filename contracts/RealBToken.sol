@@ -16,13 +16,10 @@ contract RealBToken is
     LongTermFoundationBudgetToken,
     ReservedForUseByAdminToken {
 
-    uint256 public reservedForUseByAdminFirstDate;
-
     constructor(string _name, string _symbol, uint8 _decimals)
         DetailedERC20(_name, _symbol, _decimals)
         public
     {
         pause();
-        reservedForUseByAdminFirstDate = 365 days;
     }
 }
