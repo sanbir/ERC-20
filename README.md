@@ -1,6 +1,6 @@
 # Real Big Crowdsale Contracts
 
-[![Build Status](https://travis-ci.org/RealB/crowdsale-contracts.svg?branch=master)](https://travis-ci.org/RealB/crowdsale-contracts)
+[![Build Status](https://travis-ci.com/sanbir/ERC-20.svg?branch=master)](https://travis-ci.com/sanbir/ERC-20)
 
 ## How it works:
 
@@ -70,4 +70,4 @@ npm run test
 ```
 
 ## License
-[MIT](https://github.com/RealB/crowdsale-contracts/blob/master/.github/LICENSE)
+[MIT](https://github.com/sanbir/ERC-20/blob/master/.github/LICENSE)
