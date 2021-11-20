@@ -11,5 +11,5 @@ module.exports = {
   sendTransaction,
   getBlock,
   ether,
-  bigNumberToString,
+  bigNumberToString
 }

@@ -1,13 +1,75 @@
 const Karbon14Token = artifacts.require('Karbon14Token')
 const Karbon14Crowdsale = artifacts.require('Karbon14Crowdsale')
 const { getConfig } = require('../Helpers/getConfig')
+const { latestTime } = require('../Helpers/latestTime')
+const { advanceBlock } = require('../Helpers/advanceToBlock')
+const { increaseTimeTo, duration } = require('../Helpers/increaseTime')
 const { TOKEN_NAME, TOKEN_TICKER, TOKEN_DECIMALS } = getConfig('development')
+const { bigNumberToString } = require('../Helpers/web3')
 
 const getContracts = async () => {
   const karbon14Token = await Karbon14Token.deployed()
   const karbon14Crowdsale = await Karbon14Crowdsale.deployed()
   return { karbon14Token, karbon14Crowdsale }
 }
+
+const errorVM = 'VM Exception while processing transaction: revert'
+
+describe('mintEmergencyFund', () => {
+  context('should not mint', () => {
+    contract('karbon14Token', ([owner, investor, wallet, purchaser]) => {
+      // it(`should TEST`, async () => {
+      //   console.log('TIME BEFORE')
+      //   console.log(await latestTime())
+      //   await increaseTimeTo(await latestTime() + duration.years(1))
+      //   await advanceBlock()
+      //
+      //   console.log('TIME AFTER')
+      //   console.log(await latestTime())
+      //
+      //   const { karbon14Token } = await getContracts()
+      //   console.log(await karbon14Token.emergencyFundReleaseDate())
+      // })
+
+      it(`should not mint emergency fund until 2 year anniversary`, async () => {
+        const { karbon14Token } = await getContracts()
+
+        await increaseTimeTo(await latestTime() + duration.years(1))
+        await advanceBlock()
+
+        console.log('TIME should not mint')
+        console.log(await latestTime())
+
+        const actual = await karbon14Token.mintEmergencyFund().catch(e => e.message)
+        const expected = errorVM
+
+        assert.deepEqual(actual, expected)
+      })
+    })
+  })
+
+  context('should mint', () => {
+    contract('karbon14Token', ([owner, investor, wallet, purchaser]) => {
+      it(`should mint emergency fund after 2 year anniversary`, async () => {
+        const { karbon14Token } = await getContracts()
+
+        await increaseTimeTo(await latestTime() + duration.years(2))
+        await advanceBlock()
+
+        await karbon14Token.mintEmergencyFund()
+        const isEmergencyFundMinted = await karbon14Token.isEmergencyFundMinted()
+        assert.isTrue(isEmergencyFundMinted)
+
+        const actual = bigNumberToString(await karbon14Token.balanceOf(owner))
+
+        const expected = '100000000'
+
+        assert.deepEqual(actual, expected)
+      })
+    })
+  })
+})
+
 
 contract('karbon14Token', ([owner, spender]) => {
   it(`should be ${TOKEN_NAME} the name of the new token`, async () => {
