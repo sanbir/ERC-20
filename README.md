@@ -1,6 +1,6 @@
 # Real Big Crowdsale Contracts
 
-[![Build Status](https://app.travis-ci.com/github/sanbir/ERC-20.svg?branch=master)](https://app.travis-ci.com/github/sanbir/ERC-20)
+[![Build Status](https://app.travis-ci.com/sanbir/ERC-20.svg?branch=master)](https://app.travis-ci.com/github/sanbir/ERC-20)
 
 ## How it works:
 
