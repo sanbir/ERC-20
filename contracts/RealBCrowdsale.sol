@@ -44,6 +44,6 @@ contract RealBCrowdsale is MintedCrowdsale, Ownable {
     }
 
     function returnOwnership() public onlyOwner {
-        token.transferOwnership(wallet);
+        token.transferOwnership(owner);
     }
 }

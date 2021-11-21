@@ -322,8 +322,8 @@ describe('RealBCrowdsale Pausable Token', () => {
           await RealBCrowdsale.buyTokens(investor, { value: value, from: investor })
           await RealBCrowdsale.returnOwnership()
 
-          await RealBToken.pause({ from: wallet })
-          const { logs } = await RealBToken.unpause({ from: wallet })
+          await RealBToken.pause({ from: owner })
+          const { logs } = await RealBToken.unpause({ from: owner })
 
           const actual = logs[0].event
           const expected = 'Unpause'
@@ -348,10 +348,10 @@ describe('RealBCrowdsale Pausable Token', () => {
 
           await RealBCrowdsale.returnOwnership()
 
-          await RealBToken.pause({ from: wallet })
-          await RealBToken.unpause({ from: wallet })
+          await RealBToken.pause({ from: owner })
+          await RealBToken.unpause({ from: owner })
 
-          const actual = await RealBToken.unpause({ from: wallet }).catch(e => e.message)
+          const actual = await RealBToken.unpause({ from: owner }).catch(e => e.message)
           const expected = errorVM
 
           assert.deepEqual(actual, expected)
@@ -376,7 +376,7 @@ describe('RealBCrowdsale Pausable Token', () => {
 
           await RealBCrowdsale.returnOwnership()
 
-          await RealBToken.pause({ from: wallet })
+          await RealBToken.pause({ from: owner })
           const actual = await RealBToken.paused()
           const expected = true
 
@@ -427,8 +427,8 @@ describe('RealBCrowdsale Pausable Token', () => {
           const BigNumber = web3.BigNumber
           await RealBCrowdsale.returnOwnership()
 
-          await RealBToken.pause({ from: wallet })
-          await RealBToken.unpause({ from: wallet })
+          await RealBToken.pause({ from: owner })
+          await RealBToken.unpause({ from: owner })
 
           await RealBToken.transfer(purchaser, new BigNumber(`${100}e+18`), { from: wallet })
 
@@ -455,7 +455,7 @@ describe('RealBCrowdsale Pausable Token', () => {
 
           await RealBCrowdsale.returnOwnership()
 
-          await RealBToken.pause({ from: wallet })
+          await RealBToken.pause({ from: owner })
 
           const actual = await RealBToken.transfer(purchaser, 1, { from: wallet }).catch(e => e.message)
           const expected = errorVM
@@ -562,12 +562,12 @@ describe('RealBCrowdsale Pausable Token', () => {
         await RealBCrowdsale.buyTokens(purchaser, { value: value, from: investor })
 
         await RealBCrowdsale.returnOwnership()
-        await RealBToken.pause({ from: wallet })
-        await RealBToken.unpause({ from: wallet })
+        await RealBToken.pause({ from: owner })
+        await RealBToken.unpause({ from: owner })
 
-        await RealBToken.approve(purchaser, tokens, { from: wallet })
+        await RealBToken.approve(purchaser, tokens, { from: owner })
 
-        const actual = bigNumberToString(await RealBToken.allowance(wallet, purchaser))
+        const actual = bigNumberToString(await RealBToken.allowance(owner, purchaser))
         const expected = '100'
 
         assert.deepEqual(actual, expected)
@@ -589,7 +589,7 @@ describe('RealBCrowdsale Pausable Token', () => {
         const tokens = new BigNumber(`${100}e+18`)
 
         await RealBCrowdsale.returnOwnership()
-        await RealBToken.pause({ from: wallet })
+        await RealBToken.pause({ from: owner })
 
         const actual = await RealBToken.approve(purchaser, tokens, { from: wallet }).catch(e => e.message)
         const expected = errorVM
@@ -651,8 +651,8 @@ describe('RealBCrowdsale Pausable Token', () => {
 
         await RealBCrowdsale.returnOwnership()
 
-        await RealBToken.pause({ from: wallet })
-        await RealBToken.unpause({ from: wallet })
+        await RealBToken.pause({ from: owner })
+        await RealBToken.unpause({ from: owner })
 
         const oldOwnerTokens = parseInt(bigNumberToString(await RealBToken.balanceOf(owner)))
 
@@ -689,10 +689,10 @@ describe('RealBCrowdsale Pausable Token', () => {
         await RealBToken.approve(wallet, tokens, { from: owner })
 
         await RealBCrowdsale.returnOwnership()
-        await RealBToken.pause({ from: wallet })
+        await RealBToken.pause({ from: owner })
 
         const actual = await RealBToken
-          .transferFrom(owner, purchaser, tokensTransfer, { from: wallet })
+          .transferFrom(owner, purchaser, tokensTransfer, { from: owner })
           .catch(e => e.message)
         const expected = errorVM
 
@@ -746,10 +746,10 @@ describe('RealBCrowdsale Pausable Token', () => {
         const tokensApprove = new BigNumber(`${40}e+18`)
 
         await RealBCrowdsale.returnOwnership()
-        await RealBToken.pause({ from: wallet })
+        await RealBToken.pause({ from: owner })
 
         const actual = await RealBToken
-          .increaseApproval(purchaser, tokensApprove, { from: wallet })
+          .increaseApproval(purchaser, tokensApprove, { from: owner })
           .catch(e => e.message)
 
         const expected = errorVM
@@ -777,12 +777,12 @@ describe('RealBCrowdsale Pausable Token', () => {
 
         await RealBCrowdsale.returnOwnership()
 
-        await RealBToken.pause({ from: wallet })
-        await RealBToken.unpause({ from: wallet })
+        await RealBToken.pause({ from: owner })
+        await RealBToken.unpause({ from: owner })
 
-        await RealBToken.increaseApproval(purchaser, tokensApprove, { from: wallet })
+        await RealBToken.increaseApproval(purchaser, tokensApprove, { from: owner })
 
-        const actual = bigNumberToString(await RealBToken.allowance(wallet, purchaser))
+        const actual = bigNumberToString(await RealBToken.allowance(owner, purchaser))
         const expected = '100'
 
         assert.deepEqual(actual, expected)
