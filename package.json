@@ -7,7 +7,7 @@
     "compile": "rimraf build && truffle compile --verbose-rpc",
     "test": "NODE_ENV=test truffle test",
     "migrate": "truffle migrate",
-    "ganache": "ganache-cli",
+    "ganache": "ganache-cli --defaultBalanceEther 40000",
     "ropsten": "rimraf build && npm run migrate -- --network=ropsten",
     "development": "rimraf build && npm run migrate -- --network=development",
     "live": "rimraf build && npm run migrate -- --network=live",

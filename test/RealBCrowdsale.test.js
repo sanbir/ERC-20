@@ -1,6 +1,6 @@
 const realBToken = artifacts.require('RealBToken')
 const realBCrowdsale = artifacts.require('RealBCrowdsale')
-const { ether, bigNumberToString } = require('../Helpers/web3')
+const { ether, bigNumberToString} = require('../Helpers/web3')
 const { getConfig } = require('../Helpers/getConfig')
 
 const {
@@ -511,6 +511,16 @@ describe('RealBCrowdsale Pausable Token', () => {
 
           const actual = bigNumberToString(await RealBToken.balanceOf(purchaser))
           const expected = '30000'
+          assert.deepEqual(actual, expected)
+        })
+
+        it('public investors cannot buy more than total cap for sale (50% of total cap)', async () => {
+          const { RealBCrowdsale } = await getContracts()
+
+          const value = ether(20000)
+
+          const actual = await RealBCrowdsale.buyTokens(purchaser, { value: value, from: purchaser }).catch(e => e.message)
+          const expected = errorVM
           assert.deepEqual(actual, expected)
         })
       })
