@@ -13,6 +13,8 @@ contract RealBCrowdsale is MintedCrowdsale, Ownable {
     event WalletChange(address wallet);
     event RateChange(uint256 rate);
 
+    mapping(address => uint256) publicInvestorPurchases;
+
     constructor
     (
         uint256 _rate,
@@ -24,6 +26,12 @@ contract RealBCrowdsale is MintedCrowdsale, Ownable {
     {
         token = _token;
         rate = _rate;
+    }
+
+    modifier max250k(address _beneficiary) {
+        uint256 tokens = _getTokenAmount(msg.value);
+        require(publicInvestorPurchases[_beneficiary].add(tokens) <= 250000e18);
+        _;
     }
 
     function changeRate(uint256 _rate) public onlyOwner {
@@ -45,5 +53,14 @@ contract RealBCrowdsale is MintedCrowdsale, Ownable {
 
     function returnOwnership() public onlyOwner {
         token.transferOwnership(owner);
+    }
+
+    function buyTokens(address _beneficiary)
+    public
+    payable
+    max250k(_beneficiary) {
+        uint256 tokens = _getTokenAmount(msg.value);
+        publicInvestorPurchases[_beneficiary] = publicInvestorPurchases[_beneficiary].add(tokens);
+        super.buyTokens(_beneficiary);
     }
 }

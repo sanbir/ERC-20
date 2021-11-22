@@ -525,6 +525,30 @@ describe('RealBCrowdsale Pausable Token', () => {
         })
       })
     })
+
+    contract('RealBCrowdsale', ([owner, investor, wallet, purchaser]) => {
+      context('cannot buy more than 250k tokens', () => {
+        it('1 public investor cannot buy more than 250k tokens', async () => {
+          const { RealBCrowdsale, RealBToken } = await getContracts()
+          const RealBCrowdsaleAddress = await RealBCrowdsale.address
+          await RealBToken.transferOwnership(RealBCrowdsaleAddress)
+
+          const value1 = ether(8)
+
+          await RealBCrowdsale.buyTokens(purchaser, { value: value1, from: purchaser })
+
+          const actual1 = bigNumberToString(await RealBToken.balanceOf(purchaser))
+          const expected1 = '240000'
+          assert.deepEqual(actual1, expected1)
+
+          const value2 = ether(1)
+
+          const actual2 = await RealBCrowdsale.buyTokens(purchaser, { value: value2, from: purchaser }).catch(e => e.message)
+          const expected2 = errorVM
+          assert.deepEqual(actual2, expected2)
+        })
+      })
+    })
   })
 
   describe('approve', function() {
@@ -583,7 +607,7 @@ describe('RealBCrowdsale Pausable Token', () => {
         await RealBToken.transferOwnership(RealBCrowdsaleAddress)
 
         const BigNumber = web3.BigNumber
-        const value = ether(42)
+        const value = ether(4)
         await RealBCrowdsale.buyTokens(owner, { value: value, from: investor })
 
         const tokens = new BigNumber(`${100}e+18`)
@@ -609,7 +633,7 @@ describe('RealBCrowdsale Pausable Token', () => {
         await RealBToken.transferOwnership(RealBCrowdsaleAddress)
 
         const BigNumber = web3.BigNumber
-        const value = ether(42)
+        const value = ether(4)
         await RealBCrowdsale.buyTokens(owner, { value: value, from: investor })
 
         const tokens = new BigNumber(`${42}e+18`)
@@ -679,7 +703,7 @@ describe('RealBCrowdsale Pausable Token', () => {
 
         const BigNumber = web3.BigNumber
 
-        const value = ether(42)
+        const value = ether(4)
 
         await RealBCrowdsale.buyTokens(owner, { value: value, from: investor })
 
@@ -712,7 +736,7 @@ describe('RealBCrowdsale Pausable Token', () => {
 
         const BigNumber = web3.BigNumber
 
-        const value = ether(42)
+        const value = ether(4)
 
         await RealBCrowdsale.buyTokens(purchaser, { value: value, from: investor })
 
@@ -739,7 +763,7 @@ describe('RealBCrowdsale Pausable Token', () => {
 
         const BigNumber = web3.BigNumber
 
-        const value = ether(42)
+        const value = ether(4)
 
         await RealBCrowdsale.buyTokens(purchaser, { value: value, from: investor })
 
