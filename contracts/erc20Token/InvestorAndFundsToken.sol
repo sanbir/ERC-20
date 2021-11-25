@@ -1,49 +1,53 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.8.0;
 
-import "openzeppelin-solidity/contracts/token/ERC20/CappedToken.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Capped.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract InvestorAndFundsToken is CappedToken {
+abstract contract InvestorAndFundsToken is ERC20Capped, ERC20Pausable, Ownable {
     uint256 constant public investorSupplyToMint = 50e25;
     uint256 public investorSupplyMinted = 0;
 
     constructor()
-    CappedToken(1e27)
+    ERC20Capped(1e27)
     {
+        _pause();
     }
 
-    /**
-     * @dev Function to mint tokens for investors
-     * @param _to The address that will receive the minted tokens.
-     * @param _amount The amount of tokens to mint.
-     * @return A boolean that indicates if the operation was successful.
-     */
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 amount
+    ) internal override(ERC20Pausable, ERC20) {
+        ERC20Pausable._beforeTokenTransfer(from, to, amount);
+    }
+
+    function _mint(address account, uint256 amount
+    ) internal override(ERC20Capped, ERC20) {
+        ERC20Capped._mint(account, amount);
+    }
+
     function mint(
         address _to,
         uint256 _amount
     )
     public
-    returns (bool)
+    onlyOwner
     {
-        uint256 newInvestorSupplyMinted = investorSupplyMinted.add(_amount);
+        uint256 newInvestorSupplyMinted = investorSupplyMinted + _amount;
         require(newInvestorSupplyMinted <= investorSupplyToMint);
         investorSupplyMinted = newInvestorSupplyMinted;
 
-        return super.mint(_to, _amount);
+        _mint(_to, _amount);
     }
 
-    /**
-     * @dev Function to mint reserved tokens for funds
-     * @param _to The address that will receive the minted tokens.
-     * @param _amount The amount of tokens to mint.
-     * @return A boolean that indicates if the operation was successful.
-     */
     function mintFund(
         address _to,
         uint256 _amount
     )
     internal
-    returns (bool)
     {
-        return super.mint(_to, _amount);
+        _mint(_to, _amount);
     }
 }

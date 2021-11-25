@@ -69,5 +69,9 @@ npm run ganache
 npm run test
 ```
 
+### Migration to new Solidity version
+
+https://ethereum-blockchain-developer.com/060-tokenization/06-add-crowdsale/
+
 ## License
 [MIT](https://github.com/sanbir/ERC-20/blob/master/.github/LICENSE)

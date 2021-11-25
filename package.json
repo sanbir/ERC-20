@@ -35,16 +35,16 @@
     "eslint": "5.4.0",
     "eslint-config-prettier": "3.0.1",
     "eslint-plugin-prettier": "2.6.2",
-    "ganache-cli": "6.1.6",
+    "ganache-cli": "6.12.2",
     "pify": "4.0.0",
     "prettier": "1.14.2",
     "rimraf": "2.6.2",
-    "truffle": "4.1.13",
-    "truffle-hdwallet-provider": "0.0.6"
+    "truffle": "5.4.22",
+    "@truffle/hdwallet-provider": "1.7.0"
   },
   "dependencies": {
-    "bignumber.js": "^7.2.1",
-    "openzeppelin-solidity": "1.12.0",
-    "truffle-flattener": "1.2.6"
+    "@openzeppelin/contracts": "4.3.3",
+    "bignumber.js": "7.2.1",
+    "truffle-flattener": "1.5.0"
   }
 }

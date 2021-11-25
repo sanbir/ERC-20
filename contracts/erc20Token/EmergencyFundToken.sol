@@ -1,13 +1,13 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.8.0;
 
 import "./InvestorAndFundsToken.sol";
 
-contract EmergencyFundToken is InvestorAndFundsToken {
+abstract contract EmergencyFundToken is InvestorAndFundsToken {
     uint256 constant public emergencyFundSupplyToMint = 10e25;
     bool public isEmergencyFundMinted;
     uint256 emergencyFundReleaseDate;
 
-    constructor() public
+    constructor()
     {
         emergencyFundReleaseDate = block.timestamp + 2 * 365 days;
         isEmergencyFundMinted = false;
@@ -18,17 +18,12 @@ contract EmergencyFundToken is InvestorAndFundsToken {
         _;
     }
 
-    /**
-   * @dev Function to mint tokens for Emergency Fund
-   * @return A boolean that indicates if the operation was successful.
-   */
     function mintEmergencyFund()
     public
     onlyOwner
     canReleaseEmergencyFund
-    returns (bool)
     {
         isEmergencyFundMinted = true;
-        return mintFund(owner, emergencyFundSupplyToMint);
+        mintFund(owner(), emergencyFundSupplyToMint);
     }
 }

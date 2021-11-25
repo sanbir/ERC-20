@@ -1,9 +1,8 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.8.0;
 
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./InvestorAndFundsToken.sol";
 
-contract ReservedForUseByAdminToken is InvestorAndFundsToken {
+abstract contract ReservedForUseByAdminToken is InvestorAndFundsToken {
     uint256 constant public reservedForUseByAdminSupplyToMint = 36e25;
     uint256 constant public amountToMint = 72e24;
 
@@ -12,7 +11,7 @@ contract ReservedForUseByAdminToken is InvestorAndFundsToken {
 
     uint256 public reservedForUseByAdminSupplyMinted = 0;
 
-    constructor() public
+    constructor()
     {
         reservedForUseByAdminReleaseDate = block.timestamp + 365 days;
         isReservedForUseByAdminMinted = false;
@@ -23,28 +22,21 @@ contract ReservedForUseByAdminToken is InvestorAndFundsToken {
         _;
     }
 
-    /**
-   * @dev Function to mint tokens for ReservedForUseByAdmin Fund
-   * @return A boolean that indicates if the operation was successful.
-   */
     function mintReservedForUseByAdmin()
     public
     onlyOwner
     canReleaseReservedForUseByAdmin
-    returns (bool)
     {
         reservedForUseByAdminReleaseDate = reservedForUseByAdminReleaseDate + 182 days;
 
-        bool mintResult = mintFund(owner, amountToMint);
+        mintFund(owner(), amountToMint);
 
-        reservedForUseByAdminSupplyMinted = reservedForUseByAdminSupplyMinted.add(amountToMint);
+        reservedForUseByAdminSupplyMinted = reservedForUseByAdminSupplyMinted + amountToMint;
 
         require(reservedForUseByAdminSupplyMinted <= reservedForUseByAdminSupplyToMint);
 
         if (reservedForUseByAdminSupplyMinted == reservedForUseByAdminSupplyToMint) {
             isReservedForUseByAdminMinted = true;
         }
-
-        return mintResult;
     }
 }
