@@ -71,7 +71,7 @@ abstract contract MintedCrowdsale is Context, ReentrancyGuard {
         _wallet = wallet;
     }
 
-    function receive() external payable {
+    receive() external payable {
         buyTokens(_msgSender());
     }
 

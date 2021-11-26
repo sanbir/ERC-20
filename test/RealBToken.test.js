@@ -13,7 +13,7 @@ const getContracts = async () => {
   return { RealBToken, RealBCrowdsale }
 }
 
-const errorVM = 'VM Exception while processing transaction: revert'
+const errorVM = 'Returned error: VM Exception while processing transaction: revert'
 
 describe('mintEmergencyFund', () => {
   context('should not mint', () => {
@@ -119,7 +119,7 @@ describe('ReservedForUseByAdminToken', () => {
       it(`should not mint directly without funds`, async () => {
         const { RealBToken } = await getContracts()
 
-        const BigNumber = web3.BigNumber
+        const BigNumber = web3.utils.BN
         const amount = new BigNumber(`${42}e+18`)
 
         try {

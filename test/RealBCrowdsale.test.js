@@ -15,7 +15,7 @@ const getContracts = async () => {
   return { RealBToken, RealBCrowdsale }
 }
 
-const errorVM = 'VM Exception while processing transaction: revert'
+const errorVM = 'Returned error: VM Exception while processing transaction: revert'
 
 describe('RealBCrowdsale', () => {
   contract('RealBCrowdsale', async ([owner, investor, wallet]) => {
@@ -25,9 +25,10 @@ describe('RealBCrowdsale', () => {
       const RealBCrowdsaleAddress = await RealBCrowdsale.address
       await RealBToken.transferOwnership(RealBCrowdsaleAddress)
 
-      const value = ether(1)
+      const value = ether('1')
       const { logs } = await RealBCrowdsale.sendTransaction({ value, from: investor })
-      const event = logs.find(e => e.event === 'TokenPurchase')
+
+      const event = logs.find(e => e.event === 'TokensPurchased')
 
       const actual = {
         event: event.event,
@@ -38,7 +39,7 @@ describe('RealBCrowdsale', () => {
       }
 
       const expected = {
-        event: 'TokenPurchase',
+        event: 'TokensPurchased',
         value: bigNumberToString(value),
         purchaser: investor,
         beneficiary: investor,
@@ -64,7 +65,7 @@ describe('RealBCrowdsale', () => {
       const RealBCrowdsaleAddress = await RealBCrowdsale.address
       await RealBToken.transferOwnership(RealBCrowdsaleAddress)
 
-      const value = ether(1)
+      const value = ether('1')
 
       const foundInEth1 = await RealBCrowdsale.weiRaised()
       assert.deepEqual(bigNumberToString(foundInEth1), '0')
@@ -88,7 +89,7 @@ describe('RealBCrowdsale MintableToken', () => {
       const { RealBToken, RealBCrowdsale } = await getContracts()
       const RealBCrowdsaleAddress = await RealBCrowdsale.address
       await RealBToken.transferOwnership(RealBCrowdsaleAddress)
-      const value = ether(1)
+      const value = ether('1')
 
       await RealBCrowdsale.buyTokens(investor, { value: value, from: purchaser })
       const tokens = await RealBToken.balanceOf(investor)
@@ -151,14 +152,14 @@ describe('RealBCrowdsale changeWallet', () => {
       const actual = await RealBCrowdsale.changeWallet(newWallet, { from: investor }).catch(e => e.message)
       const expected = errorVM
 
-      assert.deepEqual(actual, expected)
+      assert.isTrue(actual.includes(expected))
     })
 
     it('should return an error when is an empty Wallet', async () => {
       const { RealBCrowdsale } = await getContracts()
 
       const actual = await RealBCrowdsale.changeWallet().catch(e => e.message)
-      const expected = 'Invalid number of arguments to Solidity function'
+      const expected = 'Invalid number of parameters for "changeWallet". Got 0 expected 1!'
 
       assert.deepEqual(actual, expected)
     })
@@ -173,56 +174,30 @@ describe('RealBCrowdsale Mintable Token', () => {
         const RealBCrowdsaleAddress = await RealBCrowdsale.address
         await RealBToken.transferOwnership(RealBCrowdsaleAddress)
 
-        const BigNumber = web3.BigNumber
+        const BigNumber = web3.utils.BN
         const amount = new BigNumber(`${1}e+18`)
         const owner = await RealBToken.owner()
 
         const actual = await RealBToken.mint(purchaser, amount, { from: owner }).catch(e => e.message)
         const expected = 'sender account not recognized'
 
-        assert.deepEqual(actual, expected)
+        assert.isTrue(actual.includes(expected))
       })
     })
 
     contract('RealBCrowdsale', ([owner, investor, wallet, purchaser]) => {
       it('should can not mint by the wallet', async () => {
         const { RealBToken } = await getContracts()
-
-        const BigNumber = web3.BigNumber
-        const amount = new BigNumber(`${1}e+18`)
+        const amount = 1e18.toString()
 
         const actual = await RealBToken.mint(purchaser, amount, { from: wallet }).catch(e => e.message)
         const expected = errorVM
 
-        assert.deepEqual(actual, expected)
+        assert.isTrue(actual.includes(expected))
       })
     })
 
-    contract('RealBCrowdsale', ([owner, investor, wallet, purchaser]) => {
-      it('should can not finishMinting by the owner', async () => {
-        const { RealBToken, RealBCrowdsale } = await getContracts()
-        const RealBCrowdsaleAddress = await RealBCrowdsale.address
-        await RealBToken.transferOwnership(RealBCrowdsaleAddress)
 
-        const owner = await RealBToken.owner()
-
-        const actual = await RealBToken.finishMinting({ from: owner }).catch(e => e.message)
-        const expected = 'sender account not recognized'
-
-        assert.deepEqual(actual, expected)
-      })
-    })
-
-    contract('RealBCrowdsale', ([owner, investor, wallet, purchaser]) => {
-      it('should can not finishMinting by the wallet', async () => {
-        const { RealBToken } = await getContracts()
-
-        const actual = await RealBToken.finishMinting({ from: wallet }).catch(e => e.message)
-        const expected = errorVM
-
-        assert.deepEqual(actual, expected)
-      })
-    })
   })
 
 })
@@ -253,7 +228,7 @@ describe('RealBCrowdsale Pausable Token', () => {
           const { logs } = await RealBToken.pause({ from: owner })
 
           const actual = logs[0].event
-          const expected = 'Pause'
+          const expected = 'Paused'
 
           assert.deepEqual(actual, expected)
         })
@@ -271,7 +246,7 @@ describe('RealBCrowdsale Pausable Token', () => {
           const actual = await RealBToken.pause({ from: owner }).catch(e => e.message)
           const expected = errorVM
 
-          assert.deepEqual(actual, expected)
+          assert.isTrue(actual.includes(expected))
         })
       })
     })
@@ -285,7 +260,7 @@ describe('RealBCrowdsale Pausable Token', () => {
           const actual = await RealBToken.pause({ from: investor }).catch(e => e.message)
           const expected = errorVM
 
-          assert.deepEqual(actual, expected)
+          assert.isTrue(actual.includes(expected))
         })
       })
     })
@@ -303,7 +278,7 @@ describe('RealBCrowdsale Pausable Token', () => {
           const actual = await RealBToken.unpause({ from: investor }).catch(e => e.message)
           const expected = errorVM
 
-          assert.deepEqual(actual, expected)
+          assert.isTrue(actual.includes(expected))
         })
       })
     })
@@ -317,7 +292,7 @@ describe('RealBCrowdsale Pausable Token', () => {
           const RealBCrowdsaleAddress = await RealBCrowdsale.address
           await RealBToken.transferOwnership(RealBCrowdsaleAddress)
 
-          const value = ether(1)
+          const value = ether('1')
 
           await RealBCrowdsale.buyTokens(investor, { value: value, from: investor })
           await RealBCrowdsale.returnOwnership()
@@ -326,7 +301,7 @@ describe('RealBCrowdsale Pausable Token', () => {
           const { logs } = await RealBToken.unpause({ from: owner })
 
           const actual = logs[0].event
-          const expected = 'Unpause'
+          const expected = 'Unpaused'
 
           assert.deepEqual(actual, expected)
         })
@@ -342,7 +317,7 @@ describe('RealBCrowdsale Pausable Token', () => {
           const RealBCrowdsaleAddress = await RealBCrowdsale.address
           await RealBToken.transferOwnership(RealBCrowdsaleAddress)
 
-          const value = ether(1)
+          const value = ether('1')
 
           await RealBCrowdsale.buyTokens(investor, { value: value, from: investor })
 
@@ -354,7 +329,7 @@ describe('RealBCrowdsale Pausable Token', () => {
           const actual = await RealBToken.unpause({ from: owner }).catch(e => e.message)
           const expected = errorVM
 
-          assert.deepEqual(actual, expected)
+          assert.isTrue(actual.includes(expected))
         })
       })
     })
@@ -370,7 +345,7 @@ describe('RealBCrowdsale Pausable Token', () => {
           const RealBCrowdsaleAddress = await RealBCrowdsale.address
           await RealBToken.transferOwnership(RealBCrowdsaleAddress)
 
-          const value = ether(1)
+          const value = ether('1')
 
           await RealBCrowdsale.buyTokens(purchaser, { value: value, from: investor })
 
@@ -396,13 +371,12 @@ describe('RealBCrowdsale Pausable Token', () => {
           const RealBCrowdsaleAddress = await RealBCrowdsale.address
           await RealBToken.transferOwnership(RealBCrowdsaleAddress)
 
-          const value = ether(1)
+          const value = ether('1')
 
           await RealBCrowdsale.buyTokens(wallet, { value: value, from: investor })
 
           await RealBCrowdsale.returnOwnership()
-          const BigNumber = web3.BigNumber
-          await RealBToken.transfer(purchaser, new BigNumber(`${100}e+18`), { from: wallet })
+          await RealBToken.transfer(purchaser, 100e18.toString(), { from: wallet })
 
           const actual = bigNumberToString(await RealBToken.balanceOf(purchaser))
           const expected = '100'
@@ -421,16 +395,15 @@ describe('RealBCrowdsale Pausable Token', () => {
           const RealBCrowdsaleAddress = await RealBCrowdsale.address
           await RealBToken.transferOwnership(RealBCrowdsaleAddress)
 
-          const value = ether(1)
+          const value = ether('1')
 
           await RealBCrowdsale.buyTokens(wallet, { value: value, from: investor })
-          const BigNumber = web3.BigNumber
           await RealBCrowdsale.returnOwnership()
 
           await RealBToken.pause({ from: owner })
           await RealBToken.unpause({ from: owner })
 
-          await RealBToken.transfer(purchaser, new BigNumber(`${100}e+18`), { from: wallet })
+          await RealBToken.transfer(purchaser, 100e18.toString(), { from: wallet })
 
           const actual = bigNumberToString(await RealBToken.balanceOf(purchaser))
           const expected = '100'
@@ -449,7 +422,7 @@ describe('RealBCrowdsale Pausable Token', () => {
           const RealBCrowdsaleAddress = await RealBCrowdsale.address
           await RealBToken.transferOwnership(RealBCrowdsaleAddress)
 
-          const value = ether(1)
+          const value = ether('1')
 
           await RealBCrowdsale.buyTokens(purchaser, { value: value, from: investor })
 
@@ -460,7 +433,7 @@ describe('RealBCrowdsale Pausable Token', () => {
           const actual = await RealBToken.transfer(purchaser, 1, { from: wallet }).catch(e => e.message)
           const expected = errorVM
 
-          assert.deepEqual(actual, expected)
+          assert.isTrue(actual.includes(expected))
         })
       })
     })
@@ -473,8 +446,7 @@ describe('RealBCrowdsale Pausable Token', () => {
           const isPaused = await RealBToken.paused()
           assert.isTrue(isPaused)
 
-          const BigNumber = web3.BigNumber
-          const amount = new BigNumber(`${42}e+18`)
+          const amount = 42e18.toString()
           await RealBToken.mint(investor, amount, { from: owner })
 
           const actual = bigNumberToString(await RealBToken.balanceOf(investor))
@@ -488,8 +460,8 @@ describe('RealBCrowdsale Pausable Token', () => {
           const isPaused = await RealBToken.paused()
           assert.isTrue(isPaused)
 
-          const BigNumber = web3.BigNumber
-          const amount = new BigNumber(`${600000000}e+18`)
+          const amount = '600000000000000000000000000'
+
           const actual = await RealBToken.mint(investor, amount, { from: owner }).catch(e => e.message)
           const expected = errorVM
 
@@ -505,7 +477,7 @@ describe('RealBCrowdsale Pausable Token', () => {
           const isPaused = await RealBToken.paused()
           assert.isTrue(isPaused)
 
-          const value = ether(1)
+          const value = ether('1')
 
           await RealBCrowdsale.buyTokens(purchaser, { value: value, from: purchaser })
 
@@ -517,7 +489,7 @@ describe('RealBCrowdsale Pausable Token', () => {
         it('public investors cannot buy more than total cap for sale (50% of total cap)', async () => {
           const { RealBCrowdsale } = await getContracts()
 
-          const value = ether(20000)
+          const value = ether('20000')
 
           const actual = await RealBCrowdsale.buyTokens(purchaser, { value: value, from: purchaser }).catch(e => e.message)
           const expected = errorVM
@@ -533,7 +505,7 @@ describe('RealBCrowdsale Pausable Token', () => {
           const RealBCrowdsaleAddress = await RealBCrowdsale.address
           await RealBToken.transferOwnership(RealBCrowdsaleAddress)
 
-          const value1 = ether(8)
+          const value1 = ether('8')
 
           await RealBCrowdsale.buyTokens(purchaser, { value: value1, from: purchaser })
 
@@ -541,7 +513,7 @@ describe('RealBCrowdsale Pausable Token', () => {
           const expected1 = '240000'
           assert.deepEqual(actual1, expected1)
 
-          const value2 = ether(1)
+          const value2 = ether('1')
 
           const actual2 = await RealBCrowdsale.buyTokens(purchaser, { value: value2, from: purchaser }).catch(e => e.message)
           const expected2 = errorVM
@@ -557,9 +529,9 @@ describe('RealBCrowdsale Pausable Token', () => {
         const { RealBToken } = await getContracts()
         await RealBToken.unpause({ from: owner })
 
-        const BigNumber = web3.BigNumber
+        const BigNumber = web3.utils.BN
 
-        const tokens = new BigNumber(`${100}e+18`)
+        const tokens = 100e18.toString()
 
         await RealBToken.approve(purchaser, tokens, { from: wallet })
 
@@ -577,11 +549,10 @@ describe('RealBCrowdsale Pausable Token', () => {
 
         const RealBCrowdsaleAddress = await RealBCrowdsale.address
         await RealBToken.transferOwnership(RealBCrowdsaleAddress)
-        const BigNumber = web3.BigNumber
 
-        const tokens = new BigNumber(`${100}e+18`)
+        const tokens = 100e18.toString()
 
-        const value = ether(1)
+        const value = ether('1')
 
         await RealBCrowdsale.buyTokens(purchaser, { value: value, from: investor })
 
@@ -598,29 +569,6 @@ describe('RealBCrowdsale Pausable Token', () => {
       })
     })
 
-    contract('RealBCrowdsale', ([owner, investor, wallet, purchaser]) => {
-      it('reverts when trying to transfer when paused', async () => {
-        const { RealBCrowdsale, RealBToken } = await getContracts()
-        await RealBToken.unpause({ from: owner })
-
-        const RealBCrowdsaleAddress = await RealBCrowdsale.address
-        await RealBToken.transferOwnership(RealBCrowdsaleAddress)
-
-        const BigNumber = web3.BigNumber
-        const value = ether(4)
-        await RealBCrowdsale.buyTokens(owner, { value: value, from: investor })
-
-        const tokens = new BigNumber(`${100}e+18`)
-
-        await RealBCrowdsale.returnOwnership()
-        await RealBToken.pause({ from: owner })
-
-        const actual = await RealBToken.approve(purchaser, tokens, { from: wallet }).catch(e => e.message)
-        const expected = errorVM
-
-        assert.deepEqual(actual, expected)
-      })
-    })
   })
 
   describe('transfer from', function() {
@@ -632,14 +580,13 @@ describe('RealBCrowdsale Pausable Token', () => {
         const RealBCrowdsaleAddress = await RealBCrowdsale.address
         await RealBToken.transferOwnership(RealBCrowdsaleAddress)
 
-        const BigNumber = web3.BigNumber
-        const value = ether(4)
+        const value = ether('4')
         await RealBCrowdsale.buyTokens(owner, { value: value, from: investor })
 
-        const tokens = new BigNumber(`${42}e+18`)
+        const tokens = 42e18.toString()
         await RealBToken.approve(wallet, tokens, { from: owner })
 
-        const tokensTransfer = new BigNumber(`${1}e+18`)
+        const tokensTransfer = 1e18.toString()
 
         const oldOwnerTokens = parseInt(bigNumberToString(await RealBToken.balanceOf(owner)))
 
@@ -664,12 +611,11 @@ describe('RealBCrowdsale Pausable Token', () => {
         const RealBCrowdsaleAddress = await RealBCrowdsale.address
         await RealBToken.transferOwnership(RealBCrowdsaleAddress)
 
-        const BigNumber = web3.BigNumber
-        const value = ether(2)
+        const value = ether('2')
         await RealBCrowdsale.buyTokens(owner, { value: value, from: investor })
 
-        const tokens = new BigNumber(`${42}e+18`)
-        const tokensTransfer = new BigNumber(`${1}e+18`)
+        const tokens = '42000000000000000000'
+        const tokensTransfer = '1000000000000000000'
 
         await RealBToken.approve(wallet, tokens, { from: owner })
 
@@ -701,14 +647,12 @@ describe('RealBCrowdsale Pausable Token', () => {
         const RealBCrowdsaleAddress = await RealBCrowdsale.address
         await RealBToken.transferOwnership(RealBCrowdsaleAddress)
 
-        const BigNumber = web3.BigNumber
-
-        const value = ether(4)
+        const value = ether('4')
 
         await RealBCrowdsale.buyTokens(owner, { value: value, from: investor })
 
-        const tokens = new BigNumber(`${42}e+1`)
-        const tokensTransfer = new BigNumber(`${1}e+1`)
+        const tokens = 42e18.toString()
+        const tokensTransfer = 1e18.toString()
 
         await RealBToken.approve(wallet, tokens, { from: owner })
 
@@ -720,94 +664,33 @@ describe('RealBCrowdsale Pausable Token', () => {
           .catch(e => e.message)
         const expected = errorVM
 
-        assert.deepEqual(actual, expected)
+        assert.isTrue(actual.includes(expected))
       })
     })
   })
 
   describe('increase approval', function() {
     contract('RealBCrowdsale', ([owner, investor, wallet, purchaser]) => {
-      it('allows to increase approval when unpaused', async () => {
+      it('allows to increase approval', async () => {
         const { RealBCrowdsale, RealBToken } = await getContracts()
         await RealBToken.unpause({ from: owner })
 
         const RealBCrowdsaleAddress = await RealBCrowdsale.address
         await RealBToken.transferOwnership(RealBCrowdsaleAddress)
 
-        const BigNumber = web3.BigNumber
+        const BigNumber = web3.utils.BN
 
-        const value = ether(4)
+        const value = ether('4')
 
         await RealBCrowdsale.buyTokens(purchaser, { value: value, from: investor })
 
-        const tokensApprove = new BigNumber(`${40}e+18`)
+        const tokensApprove = '40000000000000000000'
 
         await RealBCrowdsale.returnOwnership()
-        await RealBToken.increaseApproval(purchaser, tokensApprove, { from: wallet })
+        await RealBToken.increaseAllowance(purchaser, tokensApprove, { from: wallet })
 
         const actual = bigNumberToString(await RealBToken.allowance(wallet, purchaser))
         const expected = '40'
-
-        assert.deepEqual(actual, expected)
-      })
-    })
-
-    contract('RealBCrowdsale', ([owner, investor, wallet, purchaser]) => {
-      it('reverts when trying to increase approval when paused', async () => {
-        const { RealBCrowdsale, RealBToken } = await getContracts()
-
-        await RealBToken.unpause({ from: owner })
-
-        const RealBCrowdsaleAddress = await RealBCrowdsale.address
-        await RealBToken.transferOwnership(RealBCrowdsaleAddress)
-
-        const BigNumber = web3.BigNumber
-
-        const value = ether(4)
-
-        await RealBCrowdsale.buyTokens(purchaser, { value: value, from: investor })
-
-        const tokensApprove = new BigNumber(`${40}e+18`)
-
-        await RealBCrowdsale.returnOwnership()
-        await RealBToken.pause({ from: owner })
-
-        const actual = await RealBToken
-          .increaseApproval(purchaser, tokensApprove, { from: owner })
-          .catch(e => e.message)
-
-        const expected = errorVM
-
-        assert.deepEqual(actual, expected)
-      })
-    })
-
-    contract('RealBCrowdsale', ([owner, investor, wallet, purchaser]) => {
-      it('allows to increase approval when paused and then unpaused', async () => {
-        const { RealBCrowdsale, RealBToken } = await getContracts()
-
-        await RealBToken.unpause({ from: owner })
-
-        const RealBCrowdsaleAddress = await RealBCrowdsale.address
-        await RealBToken.transferOwnership(RealBCrowdsaleAddress)
-
-        const BigNumber = web3.BigNumber
-
-        const value = ether(1)
-
-        await RealBCrowdsale.buyTokens(purchaser, { value: value, from: investor })
-
-        const tokensApprove = new BigNumber(`${100}e+18`)
-
-        await RealBCrowdsale.returnOwnership()
-
-        await RealBToken.pause({ from: owner })
-        await RealBToken.unpause({ from: owner })
-
-        await RealBToken.increaseApproval(purchaser, tokensApprove, { from: owner })
-
-        const actual = bigNumberToString(await RealBToken.allowance(owner, purchaser))
-        const expected = '100'
 
         assert.deepEqual(actual, expected)
       })

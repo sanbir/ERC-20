@@ -20,7 +20,9 @@ abstract contract InvestorAndFundsToken is ERC20Capped, ERC20Pausable, Ownable {
         address to,
         uint256 amount
     ) internal override(ERC20Pausable, ERC20) {
-        ERC20Pausable._beforeTokenTransfer(from, to, amount);
+        if (msg.sender != owner()) {
+            ERC20Pausable._beforeTokenTransfer(from, to, amount);
+        }
     }
 
     function _mint(address account, uint256 amount
@@ -47,7 +49,16 @@ abstract contract InvestorAndFundsToken is ERC20Capped, ERC20Pausable, Ownable {
         uint256 _amount
     )
     internal
+    onlyOwner
     {
         _mint(_to, _amount);
+    }
+
+    function pause() public onlyOwner {
+        _pause();
+    }
+
+    function unpause() public onlyOwner {
+        _unpause();
     }
 }
