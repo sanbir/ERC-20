@@ -1,5 +1,5 @@
 const HDWalletProvider = require('@truffle/hdwallet-provider')
-const { ROPSTEN_MNEMONIC, INFURA_API_KEY } = process.env
+const {ROPSTEN_MNEMONIC, INFURA_API_KEY} = process.env
 
 module.exports = {
   migrations_directory: './migrations',
@@ -10,12 +10,19 @@ module.exports = {
       network_id: '*', // Match any network id
     },
     ropsten: {
-      provider: () => new HDWalletProvider(ROPSTEN_MNEMONIC, `https://mainnet.infura.io/v3/${INFURA_API_KEY}`),
-      gas: 4698712,
+      provider: () =>
+          new HDWalletProvider({
+            mnemonic: ROPSTEN_MNEMONIC,
+            providerOrUrl: `https://ropsten.infura.io/v3/${INFURA_API_KEY}`,
+          }),
       network_id: '3',
     },
     live: {
-      provider: () => new HDWalletProvider(ROPSTEN_MNEMONIC, `https://mainnet.infura.io/v3/${INFURA_API_KEY}`),
+      provider: () =>
+        new HDWalletProvider({
+          mnemonic: ROPSTEN_MNEMONIC,
+          providerOrUrl: `https://ropsten.infura.io/v3/${INFURA_API_KEY}`,
+        }),
       gas: 4698712,
       network_id: '1',
     },
@@ -32,7 +39,7 @@ module.exports = {
   },
   compilers: {
     solc: {
-      version: "^0.8.0"
-    }
-  }
+      version: '^0.8.0',
+    },
+  },
 }

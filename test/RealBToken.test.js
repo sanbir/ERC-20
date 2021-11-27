@@ -192,10 +192,10 @@ contract('RealBToken', ([owner, spender]) => {
     assert.equal(ticker, TOKEN_TICKER)
   })
 
-  it(`should be ${TOKEN_DECIMALS} the decimals of the new token`, async () => {
+  it(`should be 18 the decimals of the new token`, async () => {
     const { RealBToken } = await getContracts()
     const decimals = await RealBToken.decimals()
-    assert.equal(decimals, TOKEN_DECIMALS)
+    assert.equal(decimals, 18)
   })
 })
 

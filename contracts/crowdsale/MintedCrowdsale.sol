@@ -22,7 +22,7 @@ abstract contract MintedCrowdsale is Context, ReentrancyGuard {
     using SafeMath for uint256;
 
     // The token being sold
-    RealBToken private _token;
+    address private immutable _token;
 
     // Address where funds are collected
     address private _wallet;
@@ -53,10 +53,10 @@ abstract contract MintedCrowdsale is Context, ReentrancyGuard {
      * @param wallet Address where collected funds will be forwarded to
      * @param token Address of the token being sold
      */
-    constructor (uint256 rate, address wallet, RealBToken token) {
+    constructor (uint256 rate, address wallet, address token) {
         require(rate > 0, "Crowdsale: rate is 0");
         require(wallet != address(0), "Crowdsale: wallet is the zero address");
-        require(address(token) != address(0), "Crowdsale: token is the zero address");
+        require(token != address(0), "Crowdsale: token is the zero address");
 
         _rate = rate;
         _wallet = wallet;
@@ -78,7 +78,7 @@ abstract contract MintedCrowdsale is Context, ReentrancyGuard {
     /**
      * @return the token being sold.
      */
-    function token() public view returns (RealBToken) {
+    function token() public view returns (address) {
         return _token;
     }
 

@@ -12,6 +12,7 @@ module.exports = async (deployer, network, accounts) => {
     development: accounts[2],
     ropsten: accounts[0],
     live: WALLET_ADDRESS,
+    'ropsten-fork': accounts[0]
   }
 
   const rate = TOKEN_RATE

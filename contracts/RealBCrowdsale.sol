@@ -16,11 +16,11 @@ contract RealBCrowdsale is MintedCrowdsale, Ownable {
 
     constructor
     (
-        uint256 _rate,
-        address _wallet,
-        RealBToken _token
+        uint256 rate,
+        address wallet,
+        address token
     )
-        MintedCrowdsale(_rate, _wallet, _token)
+        MintedCrowdsale(rate, wallet, token)
         public
     {
     }
@@ -44,12 +44,12 @@ contract RealBCrowdsale is MintedCrowdsale, Ownable {
     }
 
     function getTotalSupply() public view returns(uint256) {
-        uint256 totalSupply = token().totalSupply();
+        uint256 totalSupply = RealBToken(token()).totalSupply();
         return totalSupply;
     }
 
     function returnOwnership() public onlyOwner {
-        token().transferOwnership(owner());
+        RealBToken(token()).transferOwnership(owner());
     }
 
     function buyTokens(address _beneficiary)
