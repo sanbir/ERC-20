@@ -465,7 +465,7 @@ describe('RealBCrowdsale Pausable Token', () => {
           const actual = await RealBToken.mint(investor, amount, { from: owner }).catch(e => e.message)
           const expected = errorVM
 
-          assert.deepEqual(actual, expected)
+          assert.isTrue(actual.includes(expected))
         })
 
         it('public investors can buy', async () => {
@@ -493,7 +493,7 @@ describe('RealBCrowdsale Pausable Token', () => {
 
           const actual = await RealBCrowdsale.buyTokens(purchaser, { value: value, from: purchaser }).catch(e => e.message)
           const expected = errorVM
-          assert.deepEqual(actual, expected)
+          assert.isTrue(actual.includes(expected))
         })
       })
     })
@@ -517,7 +517,7 @@ describe('RealBCrowdsale Pausable Token', () => {
 
           const actual2 = await RealBCrowdsale.buyTokens(purchaser, { value: value2, from: purchaser }).catch(e => e.message)
           const expected2 = errorVM
-          assert.deepEqual(actual2, expected2)
+          assert.isTrue(actual2.includes(expected2))
         })
       })
     })

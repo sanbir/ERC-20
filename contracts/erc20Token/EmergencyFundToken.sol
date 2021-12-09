@@ -16,7 +16,7 @@ abstract contract EmergencyFundToken is InvestorAndFundsToken {
     }
 
     modifier canReleaseEmergencyFund() {
-        require(block.timestamp >= emergencyFundReleaseDate);
+        require(block.timestamp >= emergencyFundReleaseDate, "Emergency fund can't be released yet");
         _;
     }
 
@@ -25,6 +25,8 @@ abstract contract EmergencyFundToken is InvestorAndFundsToken {
     onlyOwner
     canReleaseEmergencyFund
     {
+        require(!isEmergencyFundMinted, "Emergency fund has been minted");
+
         isEmergencyFundMinted = true;
         mintFund(owner(), emergencyFundSupplyToMint);
     }

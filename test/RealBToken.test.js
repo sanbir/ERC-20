@@ -28,7 +28,7 @@ describe('mintEmergencyFund', () => {
         const actual = await RealBToken.mintEmergencyFund().catch(e => e.message)
         const expected = errorVM
 
-        assert.deepEqual(actual, expected)
+        assert.isTrue(actual.includes(expected))
       })
     })
   })
@@ -68,7 +68,7 @@ describe('LongTermFoundationBudget', () => {
         const actual = await RealBToken.mintLongTermFoundationBudget().catch(e => e.message)
         const expected = errorVM
 
-        assert.deepEqual(actual, expected)
+        assert.isTrue(actual.includes(expected))
       })
     })
   })
@@ -108,7 +108,7 @@ describe('ReservedForUseByAdminToken', () => {
         const actual = await RealBToken.mintReservedForUseByAdmin().catch(e => e.message)
         const expected = errorVM
 
-        assert.deepEqual(actual, expected)
+        assert.isTrue(actual.includes(expected))
       })
     })
   })

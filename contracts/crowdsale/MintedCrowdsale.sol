@@ -112,6 +112,8 @@ abstract contract MintedCrowdsale is Context, ReentrancyGuard {
      * @param beneficiary Recipient of the token purchase
      */
     function buyTokens(address beneficiary) virtual public nonReentrant payable {
+        require(msg.value > 0, "msg.value should be bigger than 0");
+
         uint256 weiAmount = msg.value;
         _preValidatePurchase(beneficiary, weiAmount);
 

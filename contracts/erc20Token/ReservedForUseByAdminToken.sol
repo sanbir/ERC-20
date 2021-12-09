@@ -20,7 +20,7 @@ abstract contract ReservedForUseByAdminToken is InvestorAndFundsToken {
     }
 
     modifier canReleaseReservedForUseByAdmin() {
-        require(block.timestamp >= reservedForUseByAdminReleaseDate);
+        require(block.timestamp >= reservedForUseByAdminReleaseDate, "Tokens Reserved For Use By Admin can't be released yet");
         _;
     }
 
@@ -35,7 +35,7 @@ abstract contract ReservedForUseByAdminToken is InvestorAndFundsToken {
 
         reservedForUseByAdminSupplyMinted = reservedForUseByAdminSupplyMinted + amountToMint;
 
-        require(reservedForUseByAdminSupplyMinted <= reservedForUseByAdminSupplyToMint);
+        require(reservedForUseByAdminSupplyMinted <= reservedForUseByAdminSupplyToMint, "Exceeded Reserved For Use By Admin Supply To Mint");
 
         if (reservedForUseByAdminSupplyMinted == reservedForUseByAdminSupplyToMint) {
             isReservedForUseByAdminMinted = true;

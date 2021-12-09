@@ -40,7 +40,7 @@ abstract contract InvestorAndFundsToken is ERC20Capped, ERC20Pausable, Ownable {
     onlyOwner
     {
         uint256 newInvestorSupplyMinted = investorSupplyMinted + _amount;
-        require(newInvestorSupplyMinted <= investorSupplyToMint);
+        require(newInvestorSupplyMinted <= investorSupplyToMint, "Investors exceeded total cap for sale");
         investorSupplyMinted = newInvestorSupplyMinted;
 
         _mint(_to, _amount);

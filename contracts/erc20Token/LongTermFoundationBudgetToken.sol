@@ -16,7 +16,7 @@ abstract contract LongTermFoundationBudgetToken is InvestorAndFundsToken {
     }
 
     modifier canReleaseLongTermFoundationBudget() {
-        require(block.timestamp >= longTermFoundationBudgetReleaseDate);
+        require(block.timestamp >= longTermFoundationBudgetReleaseDate, "Long Term Foundation Budget can't be released yet");
         _;
     }
 
@@ -25,6 +25,8 @@ abstract contract LongTermFoundationBudgetToken is InvestorAndFundsToken {
     onlyOwner
     canReleaseLongTermFoundationBudget
     {
+        require(!isLongTermFoundationBudgetMinted, "Long term foundation budget has been minted");
+
         isLongTermFoundationBudgetMinted = true;
         mintFund(owner(), longTermFoundationBudgetSupplyToMint);
     }

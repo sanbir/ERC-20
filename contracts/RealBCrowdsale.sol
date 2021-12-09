@@ -29,7 +29,7 @@ contract RealBCrowdsale is MintedCrowdsale, Ownable {
 
     modifier max250k(address _beneficiary) {
         uint256 tokens = _getTokenAmount(msg.value);
-        require(publicInvestorPurchases[_beneficiary].add(tokens) <= 250000e18);
+        require(publicInvestorPurchases[_beneficiary].add(tokens) <= 250000e18, "Public inverstor can buy 250000 tokens maximum");
         _;
     }
 
