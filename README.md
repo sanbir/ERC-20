@@ -1,4 +1,4 @@
-# Real Big Crowdsale Contracts
+# RealBig Crowdsale Contracts
 
 [![Build Status](https://app.travis-ci.com/sanbir/ERC-20.svg?branch=master)](https://app.travis-ci.com/github/sanbir/ERC-20)
 
@@ -35,7 +35,7 @@ To learn more, visit our project website: https://www.realbig.world/
 ## Mainnet addresses:
 
 - Cowdsale: https://polygonscan.com/address/0xcea30d85b7baaf6d4550111b7f9f3c62e2981fc0
-- Real Big Token (RealB): https://polygonscan.com/token/0x5ce03a31882a3ca6ca715a2adc81e09bb681c58e
+- RealBig Token (RealB): https://polygonscan.com/token/0x5ce03a31882a3ca6ca715a2adc81e09bb681c58e
 
 ## Details about RealB token
 
