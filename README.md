@@ -19,7 +19,7 @@ If private investors bought all total_cap_for_sale, no Public round will happen.
 
 Admin changes ownership to crowdsale contract.
 
-Crowdsale contract receives ETH and mints the remaining total_cap_for_sale.
+Crowdsale contract receives MATIC and mints the remaining total_cap_for_sale.
 
 Admin can always stop Public round and return to Private round by changing ownership back.
 
@@ -30,10 +30,12 @@ ERC-20 contract is un-paused and every holder can transfer tokens.
 - Emergency
   ERC-20 contract is paused. New ERC-20 contract is developed, deployed, and token balances migrated.
 
+To learn more, visit our project website: https://www.realbig.world/
+
 ## Mainnet addresses:
 
-- Cowdsale: https://etherscan.io/address/TODO
-- Real Big Token (RealB): https://etherscan.io/address/TODO
+- Cowdsale: https://polygonscan.com/address/0xcea30d85b7baaf6d4550111b7f9f3c62e2981fc0
+- Real Big Token (RealB): https://polygonscan.com/token/0x5ce03a31882a3ca6ca715a2adc81e09bb681c58e
 
 ## Details about RealB token
 
